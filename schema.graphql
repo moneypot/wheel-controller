@@ -1,0 +1,999 @@
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
+
+input CaasAuthenticateInput {
+  casinoBaseUrl: String!
+  userToken: String!
+}
+
+type CaasAuthenticatePayload {
+  query: Query
+  success: CaasAuthenticateSuccess
+}
+
+type CaasAuthenticateSuccess {
+  experienceId: UUID!
+  sessionId: UUID!
+  uname: String!
+  userId: UUID!
+}
+
+type CaasBalance {
+  amount: Float!
+
+  """Reads a single `CaasCasino` that is related to this `CaasBalance`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """Reads a single `CaasCurrency` that is related to this `CaasBalance`."""
+  caasCurrencyByCurrencyKeyAndCasinoId: CaasCurrency
+
+  """Reads a single `CaasExperience` that is related to this `CaasBalance`."""
+  caasExperienceByExperienceId: CaasExperience
+
+  """Reads a single `CaasUser` that is related to this `CaasBalance`."""
+  caasUserByUserId: CaasUser
+  casinoId: UUID!
+  currencyKey: String!
+  experienceId: UUID!
+  userId: UUID!
+}
+
+type CaasBalanceAlertPayload {
+  currencyKey: String
+}
+
+"""
+A condition to be used against `CaasBalance` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CaasBalanceCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+}
+
+"""A connection to a list of `CaasBalance` values."""
+type CaasBalanceConnection {
+  """
+  A list of edges which contains the `CaasBalance` and cursor to aid in pagination.
+  """
+  edges: [CaasBalanceEdge]!
+
+  """A list of `CaasBalance` objects."""
+  nodes: [CaasBalance]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CaasBalance` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CaasBalance` edge in the connection."""
+type CaasBalanceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasBalance` at the end of the edge."""
+  node: CaasBalance
+}
+
+"""Methods to use when ordering `CaasBalance`."""
+enum CaasBalanceOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type CaasBankroll {
+  amount: Float!
+  bets: BigInt!
+
+  """Reads a single `CaasCasino` that is related to this `CaasBankroll`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """Reads a single `CaasCurrency` that is related to this `CaasBankroll`."""
+  caasCurrencyByCurrencyKeyAndCasinoId: CaasCurrency
+  casinoId: UUID!
+  currencyKey: String!
+  expectedValue: Float!
+  id: UUID!
+  wagered: Float!
+}
+
+"""
+A condition to be used against `CaasBankroll` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CaasBankrollCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+}
+
+"""A connection to a list of `CaasBankroll` values."""
+type CaasBankrollConnection {
+  """
+  A list of edges which contains the `CaasBankroll` and cursor to aid in pagination.
+  """
+  edges: [CaasBankrollEdge]!
+
+  """A list of `CaasBankroll` objects."""
+  nodes: [CaasBankroll]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CaasBankroll` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CaasBankroll` edge in the connection."""
+type CaasBankrollEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasBankroll` at the end of the edge."""
+  node: CaasBankroll
+}
+
+"""Methods to use when ordering `CaasBankroll`."""
+enum CaasBankrollOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type CaasCasino {
+  bankrolls: [CaasBankroll]
+  baseUrl: String!
+
+  """Reads and enables pagination through a set of `CaasBalance`."""
+  caasBalancesByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasBalanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasBalance`."""
+    orderBy: [CaasBalanceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasBalanceConnection!
+
+  """Reads and enables pagination through a set of `CaasBankroll`."""
+  caasBankrollsByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasBankrollCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasBankroll`."""
+    orderBy: [CaasBankrollOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasBankrollConnection!
+
+  """Reads and enables pagination through a set of `CaasDeposit`."""
+  caasDepositsByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasDepositCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasDeposit`."""
+    orderBy: [CaasDepositOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasDepositConnection!
+
+  """Reads and enables pagination through a set of `CaasExperience`."""
+  caasExperiencesByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasExperienceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasExperience`."""
+    orderBy: [CaasExperienceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasExperienceConnection!
+
+  """Reads and enables pagination through a set of `CaasSession`."""
+  caasSessionsByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasSessionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasSession`."""
+    orderBy: [CaasSessionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasSessionConnection!
+
+  """Reads and enables pagination through a set of `CaasUser`."""
+  caasUsersByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasUserCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasUser`."""
+    orderBy: [CaasUserOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasUserConnection!
+
+  """Reads and enables pagination through a set of `CaasWithdrawal`."""
+  caasWithdrawalsByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasWithdrawalCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasWithdrawal`."""
+    orderBy: [CaasWithdrawalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasWithdrawalConnection!
+  currencies: [CaasCurrency]
+  graphqlUrl: String!
+  id: UUID!
+  name: String!
+  source: CaasCasinoSource!
+}
+
+enum CaasCasinoSource {
+  auto
+  manual
+}
+
+type CaasClaimFaucetPayload {
+  query: Query
+  success: Boolean!
+}
+
+type CaasCurrency {
+  """Reads and enables pagination through a set of `CaasBankroll`."""
+  caasBankrollsByCurrencyKeyAndCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasBankrollCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasBankroll`."""
+    orderBy: [CaasBankrollOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasBankrollConnection!
+
+  """Reads a single `CaasCasino` that is related to this `CaasCurrency`."""
+  caasCasinoByCasinoId: CaasCasino
+  casinoId: UUID!
+  displayUnitName: String!
+  displayUnitScale: Int!
+  key: String!
+}
+
+type CaasDeposit {
+  amount: Float!
+
+  """Reads a single `CaasCasino` that is related to this `CaasDeposit`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """Reads a single `CaasCurrency` that is related to this `CaasDeposit`."""
+  caasCurrencyByCurrencyKeyAndCasinoId: CaasCurrency
+
+  """Reads a single `CaasExperience` that is related to this `CaasDeposit`."""
+  caasExperienceByExperienceId: CaasExperience
+
+  """Reads a single `CaasUser` that is related to this `CaasDeposit`."""
+  caasUserByUserId: CaasUser
+  casinoId: UUID!
+  currencyKey: String!
+  experienceId: UUID!
+  id: UUID!
+  mpTransferId: String!
+  uname: String!
+  userId: UUID!
+}
+
+"""
+A condition to be used against `CaasDeposit` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CaasDepositCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+}
+
+"""A connection to a list of `CaasDeposit` values."""
+type CaasDepositConnection {
+  """
+  A list of edges which contains the `CaasDeposit` and cursor to aid in pagination.
+  """
+  edges: [CaasDepositEdge]!
+
+  """A list of `CaasDeposit` objects."""
+  nodes: [CaasDeposit]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CaasDeposit` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CaasDeposit` edge in the connection."""
+type CaasDepositEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasDeposit` at the end of the edge."""
+  node: CaasDeposit
+}
+
+"""Methods to use when ordering `CaasDeposit`."""
+enum CaasDepositOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type CaasExperience {
+  """Reads a single `CaasCasino` that is related to this `CaasExperience`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """Reads and enables pagination through a set of `CaasSession`."""
+  caasSessionsByExperienceId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasSessionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasSession`."""
+    orderBy: [CaasSessionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasSessionConnection!
+  casinoId: UUID!
+  id: UUID!
+  mpExperienceId: UUID!
+  name: String!
+}
+
+"""
+A condition to be used against `CaasExperience` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CaasExperienceCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `mpExperienceId` field."""
+  mpExperienceId: UUID
+}
+
+"""A connection to a list of `CaasExperience` values."""
+type CaasExperienceConnection {
+  """
+  A list of edges which contains the `CaasExperience` and cursor to aid in pagination.
+  """
+  edges: [CaasExperienceEdge]!
+
+  """A list of `CaasExperience` objects."""
+  nodes: [CaasExperience]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CaasExperience` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CaasExperience` edge in the connection."""
+type CaasExperienceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasExperience` at the end of the edge."""
+  node: CaasExperience
+}
+
+"""Methods to use when ordering `CaasExperience`."""
+enum CaasExperienceOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  ID_ASC
+  ID_DESC
+  MP_EXPERIENCE_ID_ASC
+  MP_EXPERIENCE_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type CaasFaucetClaim {
+  amount: Float!
+
+  """Reads a single `CaasCasino` that is related to this `CaasFaucetClaim`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """
+  Reads a single `CaasCurrency` that is related to this `CaasFaucetClaim`.
+  """
+  caasCurrencyByCurrencyKeyAndCasinoId: CaasCurrency
+
+  """
+  Reads a single `CaasExperience` that is related to this `CaasFaucetClaim`.
+  """
+  caasExperienceByExperienceId: CaasExperience
+
+  """Reads a single `CaasUser` that is related to this `CaasFaucetClaim`."""
+  caasUserByUserId: CaasUser
+  casinoId: UUID!
+  currencyKey: String!
+  experienceId: UUID!
+  id: UUID!
+  userId: UUID!
+}
+
+input CaasRegisterCasinoInput {
+  apiKey: String!
+  casinoBaseUrl: String!
+  graphqlUrl: String!
+}
+
+type CaasRegisterCasinoPayload {
+  casinoId: UUID!
+  query: Query
+}
+
+type CaasSession {
+  """Reads a single `CaasCasino` that is related to this `CaasSession`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """Reads a single `CaasExperience` that is related to this `CaasSession`."""
+  caasExperienceByExperienceId: CaasExperience
+
+  """Reads a single `CaasUser` that is related to this `CaasSession`."""
+  caasUserByUserId: CaasUser
+  casinoId: UUID!
+  experienceId: UUID!
+  expiredAt: Datetime!
+  id: UUID!
+  userId: UUID!
+  userToken: UUID!
+}
+
+"""
+A condition to be used against `CaasSession` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CaasSessionCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+
+  """Checks for equality with the object’s `experienceId` field."""
+  experienceId: UUID
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+}
+
+"""A connection to a list of `CaasSession` values."""
+type CaasSessionConnection {
+  """
+  A list of edges which contains the `CaasSession` and cursor to aid in pagination.
+  """
+  edges: [CaasSessionEdge]!
+
+  """A list of `CaasSession` objects."""
+  nodes: [CaasSession]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CaasSession` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CaasSession` edge in the connection."""
+type CaasSessionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasSession` at the end of the edge."""
+  node: CaasSession
+}
+
+"""Methods to use when ordering `CaasSession`."""
+enum CaasSessionOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  EXPERIENCE_ID_ASC
+  EXPERIENCE_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+}
+
+type CaasUser {
+  allDeposits(afterId: UUID): [CaasDeposit]
+  allWithdrawals(afterId: UUID): [CaasWithdrawal]
+  balanceByCurrency(currency: String!): CaasBalance
+  balances: [CaasBalance]
+
+  """Reads a single `CaasCasino` that is related to this `CaasUser`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """Reads and enables pagination through a set of `CaasSession`."""
+  caasSessionsByUserId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasSessionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasSession`."""
+    orderBy: [CaasSessionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasSessionConnection!
+  casinoId: UUID!
+  id: UUID!
+  mpUserId: UUID!
+  uname: String!
+}
+
+"""
+A condition to be used against `CaasUser` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CaasUserCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+}
+
+"""A connection to a list of `CaasUser` values."""
+type CaasUserConnection {
+  """
+  A list of edges which contains the `CaasUser` and cursor to aid in pagination.
+  """
+  edges: [CaasUserEdge]!
+
+  """A list of `CaasUser` objects."""
+  nodes: [CaasUser]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CaasUser` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CaasUser` edge in the connection."""
+type CaasUserEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasUser` at the end of the edge."""
+  node: CaasUser
+}
+
+"""Methods to use when ordering `CaasUser`."""
+enum CaasUserOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+input CaasWithdrawInput {
+  amount: Float!
+  currency: String!
+}
+
+type CaasWithdrawPayload {
+  withdrawal: CaasWithdrawal!
+}
+
+type CaasWithdrawal {
+  amount: Float!
+
+  """Reads a single `CaasCasino` that is related to this `CaasWithdrawal`."""
+  caasCasinoByCasinoId: CaasCasino
+
+  """
+  Reads a single `CaasCurrency` that is related to this `CaasWithdrawal`.
+  """
+  caasCurrencyByCurrencyKeyAndCasinoId: CaasCurrency
+
+  """
+  Reads a single `CaasExperience` that is related to this `CaasWithdrawal`.
+  """
+  caasExperienceByExperienceId: CaasExperience
+
+  """Reads a single `CaasUser` that is related to this `CaasWithdrawal`."""
+  caasUserByUserId: CaasUser
+  casinoId: UUID!
+  currencyKey: String!
+  experienceId: UUID!
+  id: UUID!
+  mpTransferId: String
+  uname: String!
+  userId: UUID!
+}
+
+"""
+A condition to be used against `CaasWithdrawal` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CaasWithdrawalCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+}
+
+"""A connection to a list of `CaasWithdrawal` values."""
+type CaasWithdrawalConnection {
+  """
+  A list of edges which contains the `CaasWithdrawal` and cursor to aid in pagination.
+  """
+  edges: [CaasWithdrawalEdge]!
+
+  """A list of `CaasWithdrawal` objects."""
+  nodes: [CaasWithdrawal]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CaasWithdrawal` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CaasWithdrawal` edge in the connection."""
+type CaasWithdrawalEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasWithdrawal` at the end of the edge."""
+  node: CaasWithdrawal
+}
+
+"""Methods to use when ordering `CaasWithdrawal`."""
+enum CaasWithdrawalOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) and, if it has a timezone, [RFC
+3339](https://datatracker.ietf.org/doc/html/rfc3339) standards. Input values
+that do not conform to both ISO 8601 and RFC 3339 may be coerced, which may lead
+to unexpected results.
+"""
+scalar Datetime
+
+input MakeWheelBetInput {
+  currency: String!
+  risk: Risk!
+  segments: Int!
+  wager: Float!
+}
+
+type MakeWheelBetPayload {
+  multiplier: Float!
+}
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  caasAuthenticate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CaasAuthenticateInput!
+  ): CaasAuthenticatePayload
+  caasClaimFaucet: CaasClaimFaucetPayload
+  caasRegisterCasino(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CaasRegisterCasinoInput!
+  ): CaasRegisterCasinoPayload
+  caasWithdraw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CaasWithdrawInput!
+  ): CaasWithdrawPayload
+  makeWheelBet(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: MakeWheelBetInput!
+  ): MakeWheelBetPayload
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+}
+
+"""The root query type which gives access points into the data universe."""
+type Query {
+  """Get a single `CaasBalance`."""
+  caasBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKey(casinoId: UUID!, currencyKey: String!, experienceId: UUID!, userId: UUID!): CaasBalance
+
+  """Get a single `CaasBankroll`."""
+  caasBankrollById(id: UUID!): CaasBankroll
+
+  """Get a single `CaasCasino`."""
+  caasCasinoById(id: UUID!): CaasCasino
+
+  """Get a single `CaasCurrency`."""
+  caasCurrencyByKeyAndCasinoId(casinoId: UUID!, key: String!): CaasCurrency
+  caasCurrentCasino: CaasCasino
+  caasCurrentSession: CaasSession
+  caasCurrentUser: CaasUser
+
+  """Get a single `CaasDeposit`."""
+  caasDepositById(id: UUID!): CaasDeposit
+
+  """Get a single `CaasExperience`."""
+  caasExperienceById(id: UUID!): CaasExperience
+
+  """Get a single `CaasFaucetClaim`."""
+  caasFaucetClaimById(id: UUID!): CaasFaucetClaim
+
+  """Get a single `CaasSession`."""
+  caasSessionById(id: UUID!): CaasSession
+
+  """Get a single `CaasUser`."""
+  caasUserById(id: UUID!): CaasUser
+
+  """Get a single `CaasWithdrawal`."""
+  caasWithdrawalById(id: UUID!): CaasWithdrawal
+
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+}
+
+enum Risk {
+  HIGH
+  LOW
+  MEDIUM
+}
+
+"""
+The root subscription type: contains realtime events you can subscribe to with the `subscription` operation.
+"""
+type Subscription {
+  caasBalanceAlert: CaasBalanceAlertPayload
+}
+
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID
