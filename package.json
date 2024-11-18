@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "resetdb": "dropdb wheel-controller && createdb wheel-controller"
   },
   "dependencies": {
     "@moneypot/caas": "^10.0.0",
