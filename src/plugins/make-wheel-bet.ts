@@ -194,6 +194,23 @@ export const MakeWheelBetPlugin = makeExtendSchemaPlugin(() => {
               values: [net, dbCurrency.key, session.casino_id],
             });
 
+            // Insert the bet into the wheel_bet table
+            await pgClient.query({
+              text: `
+                INSERT INTO app.wheel_bet (wager, multiplier, net, currency_key, user_id, casino_id, experience_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+              `,
+              values: [
+                input.wager,
+                actualMultiplier,
+                net,
+                dbCurrency.key,
+                session.user_id,
+                session.casino_id,
+                session.experience_id,
+              ],
+            });
+
             // Update bankroll stats
             await pgClient.query({
               text: `
