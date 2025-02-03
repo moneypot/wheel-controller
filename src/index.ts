@@ -6,6 +6,7 @@ import {
 } from "@moneypot/caas";
 import { join } from "node:path";
 import { MakeWheelBetPlugin } from "./plugins/make-wheel-bet.js";
+import metricsRouter from "./metrics.js";
 
 const options: ServerOptions = {
   plugins: [...defaultPlugins, MakeWheelBetPlugin],
@@ -21,6 +22,9 @@ const options: ServerOptions = {
     "..",
     "automigrations"
   ),
+  configureApp: (app) => {
+    app.use(metricsRouter);
+  },
 };
 
 startAndListen(options, ({ port }) => {
