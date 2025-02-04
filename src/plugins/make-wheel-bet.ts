@@ -130,7 +130,6 @@ export const MakeWheelBetPlugin = makeExtendSchemaPlugin(() => {
               .then(maybeOneRow)
               .then((row) => row?.amount);
 
-            console.log("balance", balance);
             if (!balance || balance < input.wager) {
               throw new GraphQLError("Insufficient funds for wager");
             }

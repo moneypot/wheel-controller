@@ -25,6 +25,9 @@ const options: ServerOptions = {
   configureApp: (app) => {
     app.use(metricsRouter);
   },
+  // logger: pino.default({
+  //   level: "info",
+  // }),
 };
 
 startAndListen(options, ({ port }) => {
