@@ -19,11 +19,20 @@ create table app.wheel_bet (
   net          float not null, -- negative if lost, wager*(multiplier-1) if won
   currency_key text  not null,
 
-  -- lets us easily look up the lastest bets for users, casinos, experiences
+  -- Remember: caas is a multi-tenant system.
   user_id       uuid not null references caas.user(id),
   casino_id     uuid not null references caas.casino(id), 
   experience_id uuid not null references caas.experience(id), 
 
+  -- Currency must be unique per casino
   foreign key (currency_key, casino_id) references caas.currency(key, casino_id)
 )
 
+-- RLS
+
+create policy select_bet on app.wheel_bet for select using (
+  -- Requests that authenticate with an api key can see all bets
+  caas_hidden.is_operator() or
+  -- Requests that authenticate with a browser session id (aka users) can only see their own best
+  user_id = caas_hidden.current_user_id()
+);
