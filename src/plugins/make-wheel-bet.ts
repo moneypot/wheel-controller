@@ -3,6 +3,7 @@ import { GraphQLError } from "@moneypot/caas/graphql";
 import { superuserPool, withPgPoolTransaction } from "@moneypot/caas/db";
 import { maybeOneRow } from "@moneypot/caas/db/util";
 import crypto from "crypto";
+import { PluginContext } from "@moneypot/caas";
 
 const Wheels: Record<string, Record<number, number[]>> = {
   LOW: {
@@ -70,13 +71,15 @@ export const MakeWheelBetPlugin = makeExtendSchemaPlugin(() => {
     `,
     resolvers: {
       Mutation: {
-        async makeWheelBet(_query, args, context) {
-          const { session } = context;
+        async makeWheelBet(_query, args, context: PluginContext) {
+          const { identity } = context;
           const { input } = args;
 
-          if (!session) {
+          if (identity?.kind !== "user") {
             throw new GraphQLError("Unauthorized");
           }
+
+          const { session } = identity;
 
           if (!Wheels[input.risk]) {
             throw new GraphQLError("Invalid risk input");

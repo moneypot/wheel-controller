@@ -6,7 +6,7 @@
     "resetdb": "dropdb wheel-controller && createdb wheel-controller"
   },
   "dependencies": {
-    "@moneypot/caas": "^12.0.1",
+    "@moneypot/caas": "^14",
     "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "prom-client": "^15.1.3"
