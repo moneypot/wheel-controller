@@ -5,13 +5,13 @@
     "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
-    "@moneypot/caas": "14.x",
-    "dotenv": "16.x",
-    "graphql": "16.x",
-    "prom-client": "15.x"
+    "@moneypot/caas": "15",
+    "dotenv": "16",
+    "graphql": "16",
+    "prom-client": "15"
   },
   "devDependencies": {
-    "@types/node": "22.x",
-    "typescript": "5.x"
+    "@types/node": "22",
+    "typescript": "5"
   }
 }

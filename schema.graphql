@@ -13,7 +13,7 @@ input CaasAddCasinoInput {
 }
 
 type CaasAddCasinoPayload {
-  casino: CaasCasino
+  caasCasino: CaasCasino
   query: Query
 }
 
@@ -121,6 +121,12 @@ for equality and combined with a logical ‘and.’
 input CaasBalanceCondition {
   """Checks for equality with the object’s `casinoId` field."""
   casinoId: UUID
+
+  """Checks for equality with the object’s `experienceId` field."""
+  experienceId: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
 }
 
 """A connection to a list of `CaasBalance` values."""
@@ -153,9 +159,13 @@ type CaasBalanceEdge {
 enum CaasBalanceOrderBy {
   CASINO_ID_ASC
   CASINO_ID_DESC
+  EXPERIENCE_ID_ASC
+  EXPERIENCE_ID_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  USER_ID_ASC
+  USER_ID_DESC
 }
 
 type CaasBankroll {
@@ -376,6 +386,35 @@ type CaasCasino {
     """The method to use when ordering `CaasExperience`."""
     orderBy: [CaasExperienceOrderBy!] = [PRIMARY_KEY_ASC]
   ): CaasExperienceConnection!
+
+  """Reads and enables pagination through a set of `CaasFaucetClaim`."""
+  caasFaucetClaimsByCasinoId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasFaucetClaimCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasFaucetClaim`."""
+    orderBy: [CaasFaucetClaimOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasFaucetClaimConnection!
 
   """Reads and enables pagination through a set of `CaasSession`."""
   caasSessionsByCasinoId(
@@ -666,8 +705,14 @@ input CaasDepositCondition {
   """Checks for equality with the object’s `casinoId` field."""
   casinoId: UUID
 
+  """Checks for equality with the object’s `experienceId` field."""
+  experienceId: UUID
+
   """Checks for equality with the object’s `id` field."""
   id: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
 }
 
 """A connection to a list of `CaasDeposit` values."""
@@ -700,16 +745,107 @@ type CaasDepositEdge {
 enum CaasDepositOrderBy {
   CASINO_ID_ASC
   CASINO_ID_DESC
+  EXPERIENCE_ID_ASC
+  EXPERIENCE_ID_DESC
   ID_ASC
   ID_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  USER_ID_ASC
+  USER_ID_DESC
 }
 
 type CaasExperience {
+  """Reads and enables pagination through a set of `CaasBalance`."""
+  caasBalancesByExperienceId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasBalanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasBalance`."""
+    orderBy: [CaasBalanceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasBalanceConnection!
+
   """Reads a single `CaasCasino` that is related to this `CaasExperience`."""
   caasCasinoByCasinoId: CaasCasino
+
+  """Reads and enables pagination through a set of `CaasDeposit`."""
+  caasDepositsByExperienceId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasDepositCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasDeposit`."""
+    orderBy: [CaasDepositOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasDepositConnection!
+
+  """Reads and enables pagination through a set of `CaasFaucetClaim`."""
+  caasFaucetClaimsByExperienceId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasFaucetClaimCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasFaucetClaim`."""
+    orderBy: [CaasFaucetClaimOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasFaucetClaimConnection!
 
   """Reads and enables pagination through a set of `CaasSession`."""
   caasSessionsByExperienceId(
@@ -739,6 +875,35 @@ type CaasExperience {
     """The method to use when ordering `CaasSession`."""
     orderBy: [CaasSessionOrderBy!] = [PRIMARY_KEY_ASC]
   ): CaasSessionConnection!
+
+  """Reads and enables pagination through a set of `CaasWithdrawal`."""
+  caasWithdrawalsByExperienceId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasWithdrawalCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasWithdrawal`."""
+    orderBy: [CaasWithdrawalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasWithdrawalConnection!
   casinoId: UUID!
   id: UUID!
   mpExperienceId: UUID!
@@ -824,6 +989,67 @@ type CaasFaucetClaim {
   userId: UUID!
 }
 
+"""
+A condition to be used against `CaasFaucetClaim` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CaasFaucetClaimCondition {
+  """Checks for equality with the object’s `casinoId` field."""
+  casinoId: UUID
+
+  """Checks for equality with the object’s `experienceId` field."""
+  experienceId: UUID
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
+}
+
+"""A connection to a list of `CaasFaucetClaim` values."""
+type CaasFaucetClaimConnection {
+  """
+  A list of edges which contains the `CaasFaucetClaim` and cursor to aid in pagination.
+  """
+  edges: [CaasFaucetClaimEdge]!
+
+  """A list of `CaasFaucetClaim` objects."""
+  nodes: [CaasFaucetClaim]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CaasFaucetClaim` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CaasFaucetClaim` edge in the connection."""
+type CaasFaucetClaimEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CaasFaucetClaim` at the end of the edge."""
+  node: CaasFaucetClaim
+}
+
+"""Methods to use when ordering `CaasFaucetClaim`."""
+enum CaasFaucetClaimOrderBy {
+  CASINO_ID_ASC
+  CASINO_ID_DESC
+  EXPERIENCE_ID_ASC
+  EXPERIENCE_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+}
+
 type CaasSession {
   """Reads a single `CaasCasino` that is related to this `CaasSession`."""
   caasCasinoByCasinoId: CaasCasino
@@ -903,7 +1129,9 @@ enum CaasSessionOrderBy {
 enum CaasTransferStatusKind {
   CANCELED
   COMPLETED
+  EXPIRED
   PENDING
+  UNCLAIMED
 }
 
 type CaasUser {
@@ -912,8 +1140,95 @@ type CaasUser {
   balanceByCurrency(currency: String!): CaasBalance
   balances: [CaasBalance]
 
+  """Reads and enables pagination through a set of `CaasBalance`."""
+  caasBalancesByUserId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasBalanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasBalance`."""
+    orderBy: [CaasBalanceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasBalanceConnection!
+
   """Reads a single `CaasCasino` that is related to this `CaasUser`."""
   caasCasinoByCasinoId: CaasCasino
+
+  """Reads and enables pagination through a set of `CaasDeposit`."""
+  caasDepositsByUserId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasDepositCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasDeposit`."""
+    orderBy: [CaasDepositOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasDepositConnection!
+
+  """Reads and enables pagination through a set of `CaasFaucetClaim`."""
+  caasFaucetClaimsByUserId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasFaucetClaimCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasFaucetClaim`."""
+    orderBy: [CaasFaucetClaimOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasFaucetClaimConnection!
 
   """Reads and enables pagination through a set of `CaasSession`."""
   caasSessionsByUserId(
@@ -943,6 +1258,35 @@ type CaasUser {
     """The method to use when ordering `CaasSession`."""
     orderBy: [CaasSessionOrderBy!] = [PRIMARY_KEY_ASC]
   ): CaasSessionConnection!
+
+  """Reads and enables pagination through a set of `CaasWithdrawal`."""
+  caasWithdrawalsByUserId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CaasWithdrawalCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CaasWithdrawal`."""
+    orderBy: [CaasWithdrawalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CaasWithdrawalConnection!
   casinoId: UUID!
   id: UUID!
   mpUserId: UUID!
@@ -1045,8 +1389,14 @@ input CaasWithdrawalCondition {
   """Checks for equality with the object’s `casinoId` field."""
   casinoId: UUID
 
+  """Checks for equality with the object’s `experienceId` field."""
+  experienceId: UUID
+
   """Checks for equality with the object’s `id` field."""
   id: UUID
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: UUID
 }
 
 """A connection to a list of `CaasWithdrawal` values."""
@@ -1079,11 +1429,15 @@ type CaasWithdrawalEdge {
 enum CaasWithdrawalOrderBy {
   CASINO_ID_ASC
   CASINO_ID_DESC
+  EXPERIENCE_ID_ASC
+  EXPERIENCE_ID_DESC
   ID_ASC
   ID_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  USER_ID_ASC
+  USER_ID_DESC
 }
 
 """A location in a connection that can be used for resuming pagination."""
@@ -1244,6 +1598,7 @@ type Query {
   """Get a single `CaasCurrency`."""
   caasCurrencyByKeyAndCasinoId(casinoId: UUID!, key: String!): CaasCurrency
   caasCurrentCasino: CaasCasino
+  caasCurrentExperience: CaasExperience
   caasCurrentSession: CaasSession
   caasCurrentUser: CaasUser
 
